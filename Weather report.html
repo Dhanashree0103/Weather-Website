@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <style>
+        /* CSS styles for the weather application UI */
+        /* ... (CSS styles for the weather application UI) ... */
+    </style>
+    <style>
+        /* Additional CSS styles for the website appearance */
+
+        /* Navbar */
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .navbar-menu li {
+            margin-left: 20px;
+        }
+
+        .navbar-menu li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .section h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .section p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        /* About Section */
+        .about-info {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 80px;
+        }
+
+        .about-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .about-info p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .about-info .about-image {
+            margin-bottom: 20px;
+        }
+
+        .about-info .about-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        /* Contact Section */
+        .section form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .section form input,
+        .section form textarea {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .section form button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .section form button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="navbar-logo">Weather App</a>
+            <ul class="navbar-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="section">
+        <div class="container">
+            <h1>Welcome to the Weather Application</h1>
+            <p>Get real-time weather information for any location.</p>
+            <form id="location-form">
+                <input type="text" id="location-input" placeholder="Enter location">
+                <button type="submit">Get Weather</button>
+            </form>
+            <div id="weather-card" class="weather-card"></div>
+            <div id="error-message" class="error-message"></div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h1>About Us</h1>
+            <div class="about-info">
+                <h3>Our Mission</h3>
+                <p> to provide accurate and up-to-date weather information to help people plan their day and make informed decisions.</p>
+                <div class="about-image">
+                    <img src="https://i.pinimg.com/564x/59/e8/2a/59e82ae18c76be3492af48e13b9e9802.jpg" alt="About Image">
+                </div>
+                <h3>Who We Are</h3>
+                <p>We continuously monitor weather patterns, collect data from various sources, and employ advanced algorithms to generate precise forecasts. Our commitment is to provide you with the most up-to-date weather information, enabling you to make informed decisions and plan your activities with confidence</p>
+                <div class="about-image">
+                    <img src="https://i.pinimg.com/564x/8a/0f/b7/8a0fb7e5b1493f1320e687bef692e139.jpg" alt="About Image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <form>
+                <input type="text" placeholder="Your Name">
+                <input type="email" placeholder="Your Email">
+                <textarea placeholder="Your Message"></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const form = document.getElementById('location-form');
+        const input = document.getElementById('location-input');
+        const weatherCard = document.getElementById('weather-card');
+        const errorMessage = document.getElementById('error-message');
+        const apiKey = '5befff58c7e24024b2d5d50001d7bdb4';
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const location = input.value.trim();
+            if (location === '') {
+                displayError('Please enter a location');
+            } else {
+                getWeather(location);
+            }
+        });
+
+        async function getWeather(location) {
+            try {
+                let url;
+                if (/^\d{5}$/.test(location)) {
+                    url = `https://api.weatherbit.io/v2.0/current?postal_code=${encodeURIComponent(location)}&key=${encodeURIComponent(apiKey)}`;
+                } else if (/^\d{6}$/.test(location)) {
+                    url = `https://api.weatherbit.io/v2.0/current?postal_code=${encodeURIComponent(location)}&key=${encodeURIComponent(apiKey)}`;
+                } else {
+                    url = `https://api.weatherbit.io/v2.0/current?city=${encodeURIComponent(location)}&key=${encodeURIComponent(apiKey)}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayWeather(data.data[0]);
+                } else {
+                    const errorMessage = data.error || 'Failed to fetch weather data';
+                    displayError(errorMessage);
+                }
+            } catch (error) {
+                displayError('An error occurred while fetching weather data');
+            }
+        }
+
+        function displayWeather(data) {
+            weatherCard.innerHTML = `
+        <img class="weather-icon" src="https://www.weatherbit.io/static/img/icons/${data.weather.icon}.png" alt="Weather Icon">
+        <div class="weather-description">${data.weather.description}</div>
+        <div class="weather-data">Temperature: ${data.temp}°C</div>
+        <div class="weather-data">Humidity: ${data.rh}%</div>
+        <div class="weather-data">Wind Speed: ${data.wind_spd} m/s</div>
+      `;
+            clearError();
+        }
+
+        function displayError(message) {
+            errorMessage.textContent = message;
+            clearWeather();
+        }
+
+        function clearError() {
+            errorMessage.textContent = '';
+        }
+
+        function clearWeather() {
+            weatherCard.innerHTML = '';
+        } // JavaScript code for weather application
+        /* ... (JavaScript code for the weather application) ... */
+    </script>
+</body>
+
+</html>
